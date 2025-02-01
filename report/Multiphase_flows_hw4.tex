@@ -5,13 +5,20 @@
 \usepackage[colorlinks=true, linkcolor=black, urlcolor=black, citecolor=black]{hyperref}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{cancel}
 \usepackage{fancyhdr, lastpage}
+\usepackage{fourier-orns}
 \usepackage{xcolor}
+
+% \usepackage{minted}
 
 \renewcommand\maketitlehooka{\null\mbox{}\vfill}
 \renewcommand\maketitlehookd{\vfill\null}
+\renewcommand{\headrule}{
+\vspace{-5pt}\hrulefill
+\raisebox{-2.1pt}{\quad\leafleft\decoone\leafright\quad}\hrulefill}
 
-\title{Satellite Orbit Control \\ HW8}
+\title{Dynamics and Stability of Multiphase Flows \\ HW4}
 \author{Almog Dobrescu\\\\ID 214254252}
 
 \pagestyle{fancy}
@@ -27,145 +34,180 @@
 
 \tableofcontents
 \vfil
+\listoffigures
 \newpage
 
-\section{Given}
-A satellite is placed in an Earth Repeat circular orbit $\left(e=0\right)$ with $T=100\left[\mathrm{min}\right]=6\cdot10^3\left[\mathrm{sec}\right]$. \\The satellite performs a \emph{D} maneuver cycle (point A) and the ground track deviation was $20\left[\mathrm{km}\right]$.\\
-At $t=5\left[\mathrm{day}\right]$ the gournd track deviation was $-10\left[\mathrm{km}\right]$ and the rate of change of the ground track was negative.
-\subsection{Desired}
-\begin{enumerate}
-    \item Altitude decay rate
-    \item Altitude difference between A and C (the end of the maneuver cycle)
-    \item Velocity change that is required to raise the altitude from C to A
-\end{enumerate}
-
-% \section{Deviation From The Nominal Point}
-% The nominal point:
-% \begin{equation}
-%     \begin{matrix}
-%         a=42164\left[\mathrm{km}\right] && e=0 && i=0
-%     \end{matrix}
-% \end{equation}
-
-% \subsection{Semi-major Axis Deviation}
-% \begin{equation}
-%     \frac{\Delta n}{\Delta a}=-\frac{3}{2}\frac{n}{a}=-0.013\left[\frac{\mathrm{deg}}{\mathrm{day}\cdot\mathrm{km}}\right]
-% \end{equation}
-% \subsection{Inclination Deviation}
-% From the law of sines for the spherical triangle:
-% \begin{equation}
-%     \frac{\sin\delta}{\sin i}=\sin\left(nt\right)
-% \end{equation}
-% $$\Downarrow$$
-% \begin{equation}
-%     \delta\left(t\right)=i\sin\left(nt\right)
-% \end{equation}
-% Napier Rules for right spherical triangle:
-% \begin{equation}
-%     \begin{array}{l}
-%         \sin\left(90^\circ-i\right)=\tan\left(90^\circ-nt\right)\tan\left(nt+\lambda\right) \\
-%         \displaystyle\cos\left(i\right)=\frac{\tan\left(nt+\lambda\right)}{\tan\left(nt\right)} \\
-%         \displaystyle1-\cos\left(i\right)=-\frac{\sin\left(\lambda\right)}{\cos\left(nt+\lambda\right)\sin\left(nt\right)} \\\\
-%         \begin{matrix}
-%             &&&& \Downarrow && \text{for small angles}
-%         \end{matrix} \\\\
-%         \displaystyle\lambda_{\left(t\right)}=-\frac{i^2}{4}\sin\left(2nt\right)
-%     \end{array}
-% \end{equation}
-
-% \subsection{Eccentricity Deviation}
-% \begin{equation}
-%     \Delta\lambda=\theta-M=\cos^{-1}\left(\displaystyle\frac{\cos\left(E\right)-e}{1-e\cos\left(E\right)}\right)-E+e\sin\left(E\right)
-% \end{equation}
-% Maximum deviation:
-% \begin{equation}
-%     \begin{array}{lcl}
-%         \displaystyle E=\frac{\pi}{2} && \cos\theta=-e \\\\
-%         \theta=\displaystyle\frac{\pi}{2} && \cos\theta=-\sin\alpha=-e \\
-%         &\Downarrow& \\\\
-%         &\displaystyle\theta=\frac{\pi}{2}+e&
-%     \end{array}
-% \end{equation}
-% \begin{equation}
-%     \Delta\lambda_{\mathrm{max}}=\frac{\pi}{2}+e-\left(\frac{\pi}{2}-e\right)=2e
-% \end{equation}
-
-\section{D Maneuver}
-The allowed tolerance is $\Delta L$, which means the allowed deviation is $\pm\Delta L$. Point A is $\Delta h$ above the nominal height and $\Delta L$ before the nominal position. The satellite is in a higher orbit than the nominal so the velocity decreases. The height of the satellite decreases because of the drag and with the lower velocity, the satellite goes backward towards the nominal point.\\
-At point B the height is equal to the nominal height but $\Delta L$ after the nominal position. The height continues to decrease and the velocity increases and passes the nominal velocity. \\
-At point C the satellite is the height $-\Delta h$ and $Delta L$ before the nominal point. At this point, using 2 pulses, the satellite transfers to point A using Hohmann transfer.
-
-\subsection{Semi-major Axis Decay Because of Drag}
+\section{Velocity Profile $U_{\left(z\right)}$ as a Funciton of \emph{z}}
+Consider a liquid jet ejected from a circular orifice of radius \emph{a} (point A). The jet has flux \emph{Q} of fluid with density $\rho$ that exits with velocity $U_0$. The surface tension between the fluid and the air with pressure $P_0$ is $\sigma$. \\
+By assuming laminar, inviscid, incpmressible, axisymmetric and steady flow, we get the Bernoulli equation, between point A and arbitrary point downstream B:
 \begin{equation}
-    \dot{a}=\frac{2a}{r}\left(2a-r\right)\frac{f_t}{V}=-\frac{2a}{r}\left(2a-r\right)\frac{\rho VK_D}{2}
+    \frac{1}{2}\rho U_0^2+\rho gz+P_A=\frac{1}{2}\rho U_{\left(z\right)}^2+P_B
 \end{equation}
-For semi-circular orbit:
-\begin{equation}
-    \dot{a}=-\rho K_D\sqrt{\mu a}=-\rho K_Dna^2
-\end{equation}
-Assuming the change of height is small (the density is constant), we will mark the constant rate of decent $k\equiv-\dot{a}$. The change of the semi-major axis when $\left(t_A=0\right)$:
-\begin{equation}
-    \Delta a=-kt
-\end{equation}
-
-\subsection{Change in Longitudinal Position}
-To calculate the change in the longitudinal position, we will find the change in the mean anomaly:
-\begin{equation}
-    \begin{matrix}
-        \Delta\dot{M}=\Delta n && \Rightarrow && \Delta M=\int_0^t\Delta ndt
-    \end{matrix}
-\end{equation}
-$\Delta n$ is the change in \emph{n} because the change in \emph{a}:
-\begin{equation}
-    \begin{matrix}
-        \displaystyle n^2=\frac{\mu}{a^3} && \rightarrow && \displaystyle \Delta n=-\frac{3}{2}\frac{n}{a}\Delta a \\\\ && \Downarrow && \\ 
-        \Delta M&& = && \displaystyle \frac{3n}{2a}\int_0^tktdt=\frac{3nk}{4a}t^2 
-    \end{matrix}
-\end{equation}
-
-\subsection{Required $\Delta v$}
-\begin{equation}
-    \Delta v=\frac{n}{2}\Delta a=\frac{n}{2}k\cdot4\sqrt{\frac{2\Delta L}{3nk}}=2\sqrt{\frac{2nk\Delta L}{3}}
-\end{equation}
-
-\newpage
-
-\section{The Solution}
-
-\subsection{Altitude Decay Rate}
+The Laplace pressure for a jet:
 \begin{equation}
     \begin{array}{c}
-        \Delta L=20\left[\mathrm{km}\right] \\\\
-        \Delta t=5-0\left[day\right] \\\\
         \begin{matrix}
-            T=6\cdot10^3 && \Rightarrow && a=7.1366\cdot10^3\left[\mathrm{km}\right] & n = 1.0472\cdot10^{-3}
+            \displaystyle\Delta P=\sigma\left(\frac{1}{R_1}+\frac{1}{R_2}\right) && \left\{\begin{array}{l}
+                R_1=R_{1\left(z\right)}=\text{inner radius (normal to the flow)} \\
+                R_2=R_{2\left(z\right)}=\text{outer radius (parallel to the flow)}
+            \end{array}\right.
         \end{matrix} \\\\
-        \Delta L_{\Delta t}=\Delta aM_{\Delta t}=\displaystyle \frac{3nk}{4}\left(\Delta t\right)^2 \\\\
-        \Downarrow \\\\
-        \displaystyle k = \frac{4\Delta L_{\Delta t}}{3n\left(\Delta t\right)^2}
+        \Downarrow \\
+        \begin{matrix}
+            \displaystyle P_A=P_0+\sigma\left(\frac{1}{a}\right) && \displaystyle P_B=P_0+\sigma\left(\frac{1}{R_1}+\frac{1}{R_2}\right)
+        \end{matrix}
     \end{array}
 \end{equation}
+substituting into the Bernoulli equation:
 \begin{equation}
-    \colorbox{yellow}{$\displaystyle k=2.0467\cdot10^{-7}\left[\frac{\mathrm{km}}{\mathrm{sec}}\right]$}
+    \frac{1}{2}\rho U_0^2+\rho gz+\cancel{P_0}+\frac{\sigma}{a}=\frac{1}{2}\rho U_{\left(z\right)}^2+\cancel{P_0}+\sigma\left(\frac{1}{R_1}+\frac{1}{R_2}\right)
+\end{equation}
+Isolating $U_{\left(z\right)}$ we get:
+\begin{equation}
+    \frac{U_{\left(z\right)}}{U_0}=\sqrt{1+\frac{2gz}{U_0^2}+\frac{2\sigma}{\rho U_0^2}\left(\frac{1}{a}-\frac{1}{R_1}-\frac{1}{R_2}\right)}
+\end{equation}
+and in dimensionless form:
+\begin{equation}
+    \frac{U_{\left(z\right)}}{U_0}=\sqrt{1+\underbrace{\frac{2z}{Fr^2a}}_{\substack{\text{acceleration}\\\text{due to gravity}}}+\underbrace{\frac{2}{We}\left(1-\frac{a}{R_1}-\frac{a}{R_2}\right)}_{\substack{\text{deceleration}\\\text{due to surface tension}}}}
+\end{equation}
+where:
+\begin{itemize}
+    \item $\displaystyle We=\frac{\rho U_0^2a}{\sigma}$ is the Webber \#
+    \item $\displaystyle Fr=\frac{U_0^2}{ga}$ is the Froud \#
+\end{itemize}
+Let's consider the curvature of the wall of the get parallel to the flow:
+\begin{equation}
+    \underbrace{\kappa}_{\substack{\text{principal}\\\text{curvature}}}=-\frac{R_{1zz}}{\left(1+R_{1z}^2\right)^{\frac{3}{2}}}\underbrace{=}_{\text{linearization}}-R_{1zz}
+\end{equation}
+The principal curvature equals one over the principal radius so:
+\begin{equation}
+    \kappa=\frac{1}{R_2}=-\frac{\partial^2 R_1}{\partial z^2}
+\end{equation}
+So, the velocity profile $U_{\left(z\right)}$ as a funciton of \emph{z} is therefore:
+\begin{equation}
+    \colorbox{yellow}{$\displaystyle\frac{U_{\left(z\right)}}{U_0}=\sqrt{1+\frac{2z}{Fr^2a}+\frac{2}{We}\left(1-\frac{a}{R_1}+a\frac{\partial^2 R_1}{\partial z^2}\right)}$}
 \end{equation}
 
-\subsection{Altitude Difference Between A and C}
+\newpage
+
+\section{ODE of Jet Radius $r_{\left(z\right)}$}
+\subsection{Formulate the ODE}
+From conservation of flux:
 \begin{equation}
     \begin{array}{c}
-        \displaystyle t_B=\sqrt{\frac{8\Delta L}{3nk}} \\\\
-        \Delta h=\Delta a=-2kt_B
+        \displaystyle Q=2\pi\int_0^{R_1}U_{\left(z\right)}rdr=\pi R_1^2U_{\left(z\right)}\underbrace{=}_{z=0}\pi a^2U_0 \\\\
+        Q_{\left(z\right)}=\pi U_{\left(z\right)}R_1^2\underbrace{=}_{\substack{\text{conservation}\\\text{of mass}}}\pi a^2U_0 \\\\
+        \Downarrow \\
+        \displaystyle \frac{R_1}{a}=\sqrt{\frac{U_0}{U_{\left(z\right)}}}
     \end{array}
 \end{equation}
+After substituting $U_{\left(z\right)}$:
 \begin{equation}
-    \colorbox{yellow}{$\displaystyle \Delta h=-0.2042\left[\mathrm{km}\right]$}
+    \colorbox{yellow}{$\displaystyle R_1=\frac{a^2U_0}{\displaystyle\sqrt{U_0^2+2gz+\frac{2\sigma}{\rho}\left(\frac{1}{a}-\frac{1}{R_1}+\frac{\partial^2 R_1}{\partial z^2}\right)}}$}
 \end{equation}
 
-\subsection{Velocity Change to Raise the Altitude From C to A}
+\subsection{Boundary Conditions}
+Assume BC:
+\begin{enumerate}
+    \item $R_{1\left(z=0\right)}=a$
+    \item $\displaystyle\left.\frac{\partial R_1}{\partial z}\right|_{z=0}=0$
+\end{enumerate}
+The first conditions is given. \\
+The second condition is derived from the fact that at the begining, the jet looks like a cylinder.
+\newpage
+
+\section{Numerical Solver}
+The selected method is the Runge-Kutta-Merson method. \\
+Isolating the second derivitive of $R_1$:
 \begin{equation}
-    \Delta v=2\sqrt{\frac{2nk\Delta L}{3}}
+    \begin{array}{rcl}
+        \displaystyle\frac{a^4}{R_1^4}&=&\displaystyle1+\frac{2z}{\text{Fr}^2a}+\frac{2}{\text{We}}\left(1-\frac{a}{R_1}+a\frac{\partial^2 R_1}{\partial z^2}\right) \\\\
+        \displaystyle\frac{\text{We}\cdot a^4}{2R_1^4}&=&\displaystyle\frac{\text{We}}{2}+\frac{\text{We}z}{\text{Fr}^2a}+1-\frac{a}{R_1}+a\frac{\partial^2R_1}{\partial z^2} \\\\
+        \displaystyle\frac{\partial^2R_1}{\partial z^2}&=&\displaystyle\frac{\text{We}\cdot a^3}{2R_1^4}-\frac{\text{We}}{2a}-\frac{\text{We}\cdot z}{\text{Fr}^2a^2}-\frac{1}{a}+\frac{1}{R_1}
+    \end{array}
+\end{equation}
+% Where:
+% \begin{equation}
+%     \begin{array}{rcl}
+%         \displaystyle\left.\frac{\partial^2R_1}{\partial z^2}\right|_i=\displaystyle f^{''}_i&=&\displaystyle\frac{\delta^2f_i}{h^2} \\\\
+%         &=&\displaystyle\frac{\delta\left(f_{i+\frac{1}{2}}-f_{i-\frac{1}{2}}\right)}{h^2} \\\\
+%         &=&\displaystyle\frac{\left(f_{i+1}-2f_{i}+f_{i-1}\right)}{h^2}
+%     \end{array}
+% \end{equation}
+% So the ODE becomes:
+% \begin{equation}
+%     R_{1,i+1}=\left(\displaystyle\frac{\text{We}\cdot a^3}{2R_1^4}-\frac{\text{We}}{2a}-\frac{\text{We}z}{\text{Fr}^2a^2}-\frac{1}{a}+\frac{1}{R_1}\right)h^2+2R_{1,i}-R_{1,i-1}
+% \end{equation}
+Defining the system of equations:
+\begin{equation}
+    \begin{matrix}
+        x=R_1 &&& y=\displaystyle\frac{\partial R_1}{\partial z}
+    \end{matrix}
 \end{equation}
 \begin{equation}
-    \colorbox{yellow}{$\displaystyle \Delta v=1.0692\cdot10^{-4}\left[\frac{\mathrm{km}}{\mathrm{sec}}\right]$}
+    \begin{matrix}
+        \left\{\begin{array}{rcl}
+            \displaystyle\frac{\partial x}{\partial z}&=&g_{\left(z,x,y\right)} \\\\
+            \displaystyle\frac{\partial y}{\partial z}&=&f_{\left(z,x,y\right)}
+        \end{array}\right. &\text{where}& \begin{array}{rcl}
+            g&=&y \\\\
+            f&=&\displaystyle\frac{\text{We}\cdot a^3}{2x^4}-\frac{\text{We}}{2a}-\frac{\text{We}\cdot z}{\text{Fr}^2a^2}-\frac{1}{a}+\frac{1}{x}
+        \end{array}
+    \end{matrix}
 \end{equation}
+The Runge-Kutta-Merson method is defined as:
+\begin{equation}
+    \begin{array}{l}
+        \left\{\begin{array}{rcl}
+            x_{i+1}&=&\displaystyle x_i+\frac{1}{6}\left(m_1+4m_4+m_5\right) \\\\
+            y_{i+1}&=&\displaystyle y_i+\frac{1}{6}\left(k_1+4k_4+k_5\right)
+        \end{array}\right. \\\\
+        \left\{\begin{array}{rcl}
+            m_1&=&hg_{\left(z_i, x_i, y_i\right)} \\
+            k_1&=&hf_{\left(z_i, x_i, y_i\right)}
+        \end{array}\right. \\\\
+        \left\{\begin{array}{rcl}
+            m_2&=&hg_{\left(z_i+\frac{1}{3}h, x_i+\frac{1}{3}m_1, y_i+\frac{1}{3}k_1\right)} \\
+            k_2&=&hf_{\left(z_i+\frac{1}{3}h, x_i+\frac{1}{3}m_1, y_i+\frac{1}{3}k_1\right)}
+        \end{array}\right. \\\\
+        \left\{\begin{array}{rcl}
+            m_3&=&hg_{\left(z_i+\frac{1}{3}h, x_i+\frac{1}{6}\left(m_1+m_2\right), y_i+\frac{1}{6}\left(k_1+k_2\right)\right)} \\
+            k_3&=&hf_{\left(z_i+\frac{1}{3}h, x_i+\frac{1}{6}\left(m_1+m_2\right), y_i+\frac{1}{6}\left(k_1+k_2\right)\right)} 
+        \end{array}\right. \\\\
+        \left\{\begin{array}{rcl}
+            m_4&=&hg_{\left(z_i+\frac{1}{2}h, x_i+\frac{1}{8}\left(m_1+3m_3\right), y_i+\frac{1}{8}\left(k_1+3k_3\right)\right)} \\
+            k_4&=&hf_{\left(z_i+\frac{1}{2}h, x_i+\frac{1}{8}\left(m_1+3m_3\right), y_i+\frac{1}{8}\left(k_1+3k_3\right)\right)} 
+        \end{array}\right. \\\\
+        \left\{\begin{array}{rcl}
+            m_5&=&hg_{\left(z_i+h, x_i+\frac{1}{2}\left(m_1-3m_3+4m_4\right), y_i+\frac{1}{2}\left(k_1-3k_3+4k_4\right)\right)} \\ 
+            k_5&=&hf_{\left(z_i+h, x_i+\frac{1}{2}\left(m_1-3m_3+4m_4\right), y_i+\frac{1}{2}\left(k_1-3k_3+4k_4\right)\right)} 
+        \end{array}\right.
+    \end{array}
+\end{equation}
+
+\newpage
+
+\section{Solution}
+\begin{equation}
+    \begin{matrix}
+        \displaystyle U_0=1\left[\frac{\mathrm{m}}{\mathrm{sec}}\right] & a=0.05\left[\mathrm{m}\right] & \displaystyle\rho=998\left[\frac{\mathrm{kg}}{\mathrm{m}^3}\right] & \displaystyle\sigma=0.0728\left[\frac{\mathrm{N}}{\mathrm{m}}\right] & \displaystyle g=9.81\left[\frac{\mathrm{m}}{\mathrm{sec}^2}\right] \\\\
+        & h=10^{-5}\left[m\right] && z=\left[0,h,2h,\cdots,5\right]\left[m\right]
+    \end{matrix}
+\end{equation}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/graph1.png}
+    \caption{The jet shape}
+    \label{fig:The_jet_shape}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/graph2.png}
+    \caption{$R_1$ as a function of z}
+    \label{fig:R_1_of_z}
+\end{figure}
+
+\section{Compering The Results}
+
 
 \end{document}
