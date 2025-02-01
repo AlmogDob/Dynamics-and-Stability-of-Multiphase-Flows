@@ -253,7 +253,7 @@ Another assumption one can make is to assume that the Webber number is large so 
     \caption{$R_1$ as a function of z when $We\rightarrow\infty$}
     \label{fig:R_1_of_z_when_We_inf}
 \end{figure}
-We can see that this assumption is not good and falls apart when z (U) is large enough.
+\noindent We can see that this assumption holds up as well. This happens because the jet accelerate and starts at a high enough velocity $\left(U_0\right)$.
 
 \newpage
 
@@ -371,7 +371,7 @@ colors = cool(4)*0.9;
 hold all
 
 plot(zs, R1s, "-", "LineWidth", 1.5, "Color", colors(1,:))
-plot(zs, a.*(1+2.*g.*zs./U0^2).^(-1/4), "-", "LineWidth", 1.5, "Color", colors(4,:))
+plot(zs, a.*(1+2*zs./Fr^2./a).^(-1/4), "-", "LineWidth", 1.5, "Color", colors(4,:))
 
 xlabel('z [m]')
 ylabel('R_1 [m]')
